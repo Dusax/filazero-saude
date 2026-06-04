@@ -1,12 +1,12 @@
 import React, { useState, useMemo } from "react";
-import { pacientes, especialidades, calcEspera } from "../data";
+import { especialidades, calcEspera } from "../data";
 
 const prioOrder = { Alta: 0, Média: 1, Baixa: 2 };
 const prioWidth = { Alta: 90, Média: 55, Baixa: 25 };
 const prioClass = { Alta: "alta", Média: "media", Baixa: "baixa" };
 const statusClass = { Aguardando: "aguardando", Confirmado: "confirmado", Faltou: "faltou" };
 
-export default function Fila() {
+export default function Fila({ pacientes }) {
   const [filterEsp, setFilterEsp] = useState("");
   const [filterStatus, setFilterStatus] = useState("");
   const [filterOrd, setFilterOrd] = useState("espera");
@@ -14,7 +14,7 @@ export default function Fila() {
 
   const lista = useMemo(() => {
     let l = pacientes
-      .filter(p => !filterEsp   || p.esp    === filterEsp)
+      .filter(p => !filterEsp    || p.esp    === filterEsp)
       .filter(p => !filterStatus || p.status === filterStatus)
       .filter(p => !search || p.nome.toLowerCase().includes(search.toLowerCase()) || p.esp.toLowerCase().includes(search.toLowerCase()));
 
@@ -23,7 +23,7 @@ export default function Fila() {
     else                             l = [...l].sort((a, b) => a.nome.localeCompare(b.nome));
 
     return l;
-  }, [filterEsp, filterStatus, filterOrd, search]);
+  }, [pacientes, filterEsp, filterStatus, filterOrd, search]);
 
   return (
     <div>
