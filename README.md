@@ -1,71 +1,27 @@
-# FilaZero Saúde — MVP
+# FilaZero Saúde
 
-Protótipo navegável de gestão de filas de saúde pública.  
-Desenvolvido para a Disciplina de Empreendedorismo — Departamento de Computação, UFRPE.
+Plataforma de gestão de filas para consultas, exames e procedimentos no SUS. Desenvolvido como projeto da disciplina de Empreendedorismo no Departamento de Computação da UFRPE.
 
-## Como fazer deploy na Vercel
+## Sobre o projeto
 
-### Opção 1 — Interface web (mais fácil)
+O FilaZero Saúde é um MVP que aborda um dos maiores problemas operacionais do sistema público de saúde: a gestão manual e fragmentada de filas de espera. Secretarias municipais dependem de planilhas, WhatsApp e ligações telefônicas para controlar centenas de pacientes por especialidade, sem rastreabilidade e com alto índice de faltas.
 
-1. Crie uma conta gratuita em [vercel.com](https://vercel.com)
-2. Clique em **"Add New Project"**
-3. Faça upload desta pasta ou conecte ao GitHub (veja abaixo)
-4. A Vercel detecta automaticamente que é Create React App
-5. Clique **Deploy** — pronto, URL gerada em ~1 minuto
+## Módulos
 
-### Opção 2 — Via GitHub (recomendado)
+- **Dashboard** — KPIs, distribuição por especialidade e mapa por bairro
+- **Importar Lista** — upload de planilha CSV/XLS com validação automática
+- **Fila de Espera** — tabela filtrável com priorização configurável
+- **Duplicatas** — detecção automática por CPF, nome e telefone
+- **Lembretes** — simulação de notificações via SMS e WhatsApp
+- **Indicadores** — métricas mensais de espera, absenteísmo e aproveitamento de vagas
 
-1. Crie um repositório no GitHub e suba esta pasta:
-   ```bash
-   git init
-   git add .
-   git commit -m "FilaZero Saúde MVP"
-   git remote add origin https://github.com/SEU_USUARIO/filazero.git
-   git push -u origin main
-   ```
-2. Acesse [vercel.com](https://vercel.com) → **Import Git Repository**
-3. Selecione o repositório → **Deploy**
+## Stack
 
-### Opção 3 — CLI da Vercel
+React · Recharts · CSS puro
 
-```bash
-npm install -g vercel
-cd filazero-saude
-vercel
-```
-
-## Rodar localmente
+## Como rodar localmente
 
 ```bash
 npm install
 npm start
 ```
-
-Acessa em: http://localhost:3000
-
-## Estrutura do projeto
-
-```
-src/
-  App.js              # Roteamento principal + sidebar
-  styles.css          # Design system completo
-  data.js             # Dados mock (pacientes, duplicatas, histórico)
-  components/
-    Dashboard.jsx     # Painel com KPIs, gráficos e mapa
-    Importar.jsx      # Upload CSV com progresso animado
-    Fila.jsx          # Tabela com filtros e ordenação
-    Duplicatas.jsx    # Detecção e remoção de duplicatas
-    Lembretes.jsx     # Simulação de notificações SMS/WhatsApp
-    Indicadores.jsx   # Gráficos e tabela de métricas
-```
-
-## Módulos do MVP
-
-| Módulo | Função |
-|--------|--------|
-| Dashboard | KPIs, gráfico por especialidade, mapa por bairro |
-| Importar Lista | Upload CSV/XLS com validação e progresso |
-| Fila de Espera | Tabela filtrável com priorização configurável |
-| Duplicatas | Detecção automática com 3 critérios de identificação |
-| Lembretes | Simulação de envio SMS/WhatsApp com prévia da mensagem |
-| Indicadores | Métricas mensais: espera, absenteísmo, aproveitamento |
