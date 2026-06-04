@@ -1,15 +1,16 @@
-import React, { useState } from "react";
-import { duplicatas as initialDuplicatas } from "../data";
+import React, { useState, useEffect } from "react";
 
-export default function Duplicatas({ onResolve }) {
+export default function Duplicatas({ duplicatas, onResolve }) {
   const [resolvidas, setResolvidas] = useState([]);
+
+  useEffect(() => { setResolvidas([]); }, [duplicatas]);
 
   function resolver(id) {
     setResolvidas(prev => [...prev, id]);
     onResolve();
   }
 
-  const pendentes = initialDuplicatas.filter(d => !resolvidas.includes(d.id));
+  const pendentes = duplicatas.filter(d => !resolvidas.includes(d.id));
 
   return (
     <div>
@@ -34,7 +35,7 @@ export default function Duplicatas({ onResolve }) {
         </div>
       )}
 
-      {initialDuplicatas.map(dup => {
+      {duplicatas.map(dup => {
         const resolvida = resolvidas.includes(dup.id);
         return (
           <div
@@ -50,10 +51,9 @@ export default function Duplicatas({ onResolve }) {
             <div className="card-title" style={{ marginBottom: 10 }}>
               <div className="card-title-icon">{dup.tipo === "error" ? "🔴" : "🟡"}</div>
               Grupo {dup.id + 1}: {dup.motivo}
-              {resolvida && (
+              {resolvida ? (
                 <span className="badge confirmado" style={{ marginLeft:"auto" }}>✅ Resolvida</span>
-              )}
-              {!resolvida && (
+              ) : (
                 <span className={`badge ${dup.tipo === "error" ? "duplicata" : "aguardando"}`} style={{ marginLeft:"auto" }}>
                   {dup.tipo === "error" ? "Duplicata confirmada" : "Suspeita — revisão manual"}
                 </span>
@@ -63,17 +63,13 @@ export default function Duplicatas({ onResolve }) {
             <div style={{ overflowX:"auto" }}>
               <table className="data-table">
                 <thead>
-                  <tr>
-                    <th>ID</th><th>Nome</th><th>CPF</th>
-                    <th>Especialidade</th><th>Solicitado</th>
-                    <th>UBS</th><th>Situação</th><th>Ação</th>
-                  </tr>
+                  <tr><th>ID</th><th>Nome</th><th>CPF</th><th>Especialidade</th><th>Solicitado</th><th>UBS</th><th>Situação</th><th>Ação</th></tr>
                 </thead>
                 <tbody>
                   {dup.registros.map(r => (
-                    <tr key={r.id} style={{ background: (r.situacao !== "Original") ? "var(--red-50)" : "white" }}>
+                    <tr key={r.id} style={{ background: r.situacao !== "Original" ? "var(--red-50)" : "white" }}>
                       <td className="mono">{r.id}</td>
-                      <td style={{ fontWeight: 600 }}>{r.nome}</td>
+                      <td style={{ fontWeight:600 }}>{r.nome}</td>
                       <td className="mono">{r.cpf}</td>
                       <td>{r.esp}</td>
                       <td>{r.sol}</td>
@@ -85,9 +81,7 @@ export default function Duplicatas({ onResolve }) {
                       </td>
                       <td>
                         {r.situacao !== "Original" && !resolvida ? (
-                          <button className="btn btn-danger btn-sm" onClick={() => resolver(dup.id)}>
-                            Remover
-                          </button>
+                          <button className="btn btn-danger btn-sm" onClick={() => resolver(dup.id)}>Remover</button>
                         ) : (
                           <span style={{ fontSize:11, color:"var(--gray-400)" }}>Manter</span>
                         )}
@@ -105,9 +99,9 @@ export default function Duplicatas({ onResolve }) {
         <div className="card-title"><div className="card-title-icon">🔍</div>Como a detecção funciona</div>
         <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:14 }}>
           {[
-            { color:"var(--blue-50)",   border:"var(--blue-200)",  title:"1. CPF idêntico",         titleColor:"var(--blue-800)",  text:"Mesmo CPF com especialidades iguais = duplicata certa. Mesmo CPF em especialidades diferentes = verificação manual." },
-            { color:"var(--amber-50)",  border:"var(--amber-100)", title:"2. Nome + data de nasc.", titleColor:"var(--amber-700)", text:"Nome similar (≥ 90% de similaridade) com mesma data de nascimento pode indicar erro de digitação no CPF." },
-            { color:"var(--teal-50)",   border:"var(--teal-100)",  title:"3. Telefone coincidente", titleColor:"var(--teal-700)",  text:"Mesmo número com nomes diferentes pode indicar familiar cadastrado incorretamente na fila." },
+            { color:"var(--blue-50)",  border:"var(--blue-200)",  title:"1. CPF idêntico",         titleColor:"var(--blue-800)",  text:"Mesmo CPF com especialidades iguais = duplicata certa. Mesmo CPF em especialidades diferentes = verificação manual." },
+            { color:"var(--amber-50)", border:"var(--amber-100)", title:"2. Nome + data de nasc.", titleColor:"var(--amber-700)", text:"Nome similar (≥ 90% de similaridade) com mesma data de nascimento pode indicar erro de digitação no CPF." },
+            { color:"var(--teal-50)",  border:"var(--teal-100)",  title:"3. Telefone coincidente", titleColor:"var(--teal-700)",  text:"Mesmo número com nomes diferentes pode indicar familiar cadastrado incorretamente na fila." },
           ].map(b => (
             <div key={b.title} style={{ padding:14, background:b.color, borderRadius:8, border:`1px solid ${b.border}` }}>
               <div style={{ fontSize:13, fontWeight:700, color:b.titleColor, marginBottom:6 }}>{b.title}</div>
